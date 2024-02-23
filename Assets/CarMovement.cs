@@ -20,9 +20,14 @@ public class CarMovement : MonoBehaviour
     private float presentBreakForce = 0f;
     private float presentAcceleration = 0f;
 
+    [Header("CarMovement Steering")]
+    public float wheelsTorque = 35f;
+    private float presentTurnAngle = 0f;
+
     private void Update()
     {
         MoveCar();
+        CarSteering();
     }
 
     private void MoveCar()
@@ -33,5 +38,12 @@ public class CarMovement : MonoBehaviour
         backRightWheelCollider.motorTorque = presentAcceleration;
 
         presentAcceleration = accelarationForce * Input.GetAxis("Vertical");
+    }
+
+    private void CarSteering()
+    {
+        presentTurnAngle = wheelsTorque * Input.GetAxis("Horizontal");
+        frontLeftWheelCollider.steerAngle = presentTurnAngle;
+        frontRightWheelCollider.steerAngle = presentTurnAngle;
     }
 }
