@@ -28,6 +28,7 @@ public class CarMovement : MonoBehaviour
     {
         MoveCar();
         CarSteering();
+        ApplyBreaks();
     }
 
     private void MoveCar()
@@ -45,5 +46,35 @@ public class CarMovement : MonoBehaviour
         presentTurnAngle = wheelsTorque * Input.GetAxis("Horizontal");
         frontLeftWheelCollider.steerAngle = presentTurnAngle;
         frontRightWheelCollider.steerAngle = presentTurnAngle;
+
+        SteeringWheels(frontLeftWheelCollider, frontLeftWheelTransform);
+        SteeringWheels(frontRightWheelCollider, frontRightWheelTransform);
+        SteeringWheels(backLeftWheelCollider, backLeftWheelTransform);
+        SteeringWheels(backRightWheelCollider, backRightWheelTransform);
+    }
+
+    private void SteeringWheels(WheelCollider WC, Transform WT)
+    {
+        Vector3 position;
+        Quaternion rotation;
+
+        WC.GetWorldPose(out position, out rotation);
+    }
+
+    public void ApplyBreaks()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            presentBreakForce = breakingForce;
+        }
+        else
+        {
+            presentBreakForce = 0f;
+        }
+
+        frontLeftWheelCollider.brakeTorque = presentBreakForce;
+        frontRightWheelCollider.brakeTorque = presentBreakForce;
+        backLeftWheelCollider.brakeTorque = presentBreakForce;
+        backRightWheelCollider.brakeTorque = presentBreakForce;
     }
 }
