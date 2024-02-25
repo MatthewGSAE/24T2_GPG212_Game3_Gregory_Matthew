@@ -57,11 +57,11 @@ public class Timer : MonoBehaviour
             carMovement4.accelarationForce = 300f;
             carMovement5.accelarationForce = 300f;
             carMovement6.accelarationForce = 300f;
-            opponentCar.movingSpeed = 14f;
+            opponentCar.movingSpeed = 15.8f;
             opponentCar1.movingSpeed = 15f;
             opponentCar2.movingSpeed = 16f;
-            opponentCar3.movingSpeed = 13f;
-            opponentCar4.movingSpeed = 14f;
+            opponentCar3.movingSpeed = 15.5f;
+            opponentCar4.movingSpeed = 15.2f;
         }
     }
 
