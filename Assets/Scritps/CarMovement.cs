@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CarMovement : MonoBehaviour
@@ -20,15 +21,20 @@ public class CarMovement : MonoBehaviour
     private float presentBreakForce = 0f;
     private float presentAcceleration = 0f;
 
-    [Header("CarMovement Steering")]
+    [Header("Car Steering")]
     public float wheelsTorque = 35f;
     private float presentTurnAngle = 0f;
+
+    [Header("Car Sounds")]
+    public AudioSource audioSource;
+    public AudioClip accelarationSound;
+    public AudioClip slowAccelarationSound;
+    public AudioClip stopSound;
 
     private void Update()
     {
         MoveCar();
         CarSteering();
-        ApplyBreaks();
     }
 
     private void MoveCar()
@@ -38,12 +44,26 @@ public class CarMovement : MonoBehaviour
         backLeftWheelCollider.motorTorque = presentAcceleration;
         backRightWheelCollider.motorTorque = presentAcceleration;
 
-        presentAcceleration = accelarationForce * Input.GetAxis("Vertical");
+        presentAcceleration = accelarationForce * SimpleInput.GetAxis("Vertical");
+
+        if(presentAcceleration > 0)
+        {
+            audioSource.PlayOneShot(accelarationSound, 0.2f);
+        }
+
+        else if(presentAcceleration < 0)
+        {
+            audioSource.PlayOneShot(slowAccelarationSound, 0.2f);
+        }
+        else if(presentAcceleration == 0)
+        {
+            audioSource.PlayOneShot(stopSound, 0.1f);
+        }
     }
 
     private void CarSteering()
     {
-        presentTurnAngle = wheelsTorque * Input.GetAxis("Horizontal");
+        presentTurnAngle = wheelsTorque * SimpleInput.GetAxis("Horizontal");
         frontLeftWheelCollider.steerAngle = presentTurnAngle;
         frontRightWheelCollider.steerAngle = presentTurnAngle;
 
@@ -63,14 +83,21 @@ public class CarMovement : MonoBehaviour
 
     public void ApplyBreaks()
     {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            presentBreakForce = breakingForce;
-        }
-        else
-        {
-            presentBreakForce = 0f;
-        }
+        StartCoroutine(CarBreaking());
+    }
+
+    IEnumerator CarBreaking()
+    {
+        presentBreakForce = breakingForce;
+
+        frontLeftWheelCollider.brakeTorque = presentBreakForce;
+        frontRightWheelCollider.brakeTorque = presentBreakForce;
+        backLeftWheelCollider.brakeTorque = presentBreakForce;
+        backRightWheelCollider.brakeTorque = presentBreakForce;
+
+        yield return new WaitForSeconds(2f);
+
+        presentBreakForce = 0f;
 
         frontLeftWheelCollider.brakeTorque = presentBreakForce;
         frontRightWheelCollider.brakeTorque = presentBreakForce;
