@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
     [Header("Options")]
     public GameObject optionsPanel;
     public Button backButton;
+    public bool isUsingWheel;
 
     [Header("Credits")]
     public GameObject creditsPanel;
@@ -31,6 +32,18 @@ public class MenuManager : MonoBehaviour
     {
         optionsPanel.SetActive(true);
         menu.SetActive(false);
+    }
+
+    public void chooseWheel()
+    {
+        isUsingWheel = true;
+        FindAnyObjectByType<PersistentObject>().isUsingWheel = isUsingWheel;
+    }
+
+    public void chooseArrows()
+    {
+        isUsingWheel = false;
+        FindAnyObjectByType<PersistentObject>().isUsingWheel = isUsingWheel;
     }
 
     public void Back()
